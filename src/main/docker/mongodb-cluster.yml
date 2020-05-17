@@ -1,0 +1,16 @@
+version: '2'
+services:
+  visionmongo-mongodb:
+    image: mongo:4.0.12
+    ports:
+      - '27017:27017'
+    command: mongos --configdb visionmongo-mongodb-config
+  visionmongo-mongodb-node:
+    build:
+      context: .
+      dockerfile: mongodb/MongoDB.Dockerfile
+    command: mongod --replSet rs1 --noprealloc --smallfiles
+  visionmongo-mongodb-config:
+    image: mongo:4.0.12
+    container_name: visionmongo-mongodb-config
+    command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
